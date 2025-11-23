@@ -40,3 +40,4 @@ class Product(BaseModel):
             f"Product(id={self.id}, name='{self.name}', "
             f"price={self.price}, quantity={self.quantity})"
         )
+        
