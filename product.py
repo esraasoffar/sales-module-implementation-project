@@ -1,8 +1,8 @@
 from base import BaseModel
 
 class Product(BaseModel):
-    def _init_(self, name, price, quantity):
-        super()._init_(name)
+    def __init__(self, name, price, quantity):
+        super().__init__(name)
         self.price = price
         self.quantity = quantity   
 
@@ -35,7 +35,7 @@ class Product(BaseModel):
     def get_price(self):
         return self.price
 
-    def _str_(self):
+    def __str__(self):
         return (
             f"Product(id={self.id}, name='{self.name}', "
             f"price={self.price}, quantity={self.quantity})"
