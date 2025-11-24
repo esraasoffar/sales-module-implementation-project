@@ -15,7 +15,32 @@ def list_customers(customers):
     print("\nSelect Customer:")
     for i, c in enumerate(customers, start=1):
         print(f"{i}. {c.name}")
+def cancel_order(orders):
+    """Cancel a confirmed order and restore stock."""
+    confirmed_orders = [o for o in orders if o.state == "confirmed"]
+    if not confirmed_orders:
+        print("No confirmed orders to cancel.")
+        return
 
+    print("\nConfirmed Orders:")
+    for i, order in enumerate(confirmed_orders, start=1):
+        print(f"{i}. {order.customer.name} - Total: {order.compute_total()}")
+
+    try:
+        idx = int(input("Select order to cancel: ")) - 1
+        order_to_cancel = confirmed_orders[idx]
+    except:
+        print("Invalid selection.")
+        return
+
+    confirm = input(f"Are you sure you want to cancel the order for {order_to_cancel.customer.name}? (yes/no): ").strip().lower()
+    if confirm == "yes":
+        for line in order_to_cancel.lines:
+            line.product.increase_stock(line.quantity)
+        order_to_cancel.state = "canceled"
+        print("Order canceled. Stock has been restored.")
+    else:
+        print("Order not canceled.")
 
 def create_sale_order(customers, products, existing_order=None):
     # Resume draft or create new
@@ -73,23 +98,6 @@ def create_sale_order(customers, products, existing_order=None):
             except Exception as e:
                 print("Error:", e)
 
-        elif choice == "2":
-            # Remove product
-            if not sale_order.lines:
-                print("No products in order to remove.")
-                continue
-
-            print("\nCurrent Order Lines:")
-            for i, line in enumerate(sale_order.lines, start=1):
-                print(f"{i}. {line.product.name} - Qty: {line.quantity}")
-
-            try:
-                remove_idx = int(input("Enter line number to remove: ")) - 1
-                removed_line = sale_order.lines.pop(remove_idx)
-                print(f"Removed {removed_line.product.name} from order.\n")
-            except:
-                print("Invalid input.")
-
         elif choice == "3":
             # View current order
             if not sale_order.lines:
@@ -123,6 +131,7 @@ def create_sale_order(customers, products, existing_order=None):
             except Exception as e:
                 print("Error:", e)
             break  # Return to main menu
+
 
         else:
             print("Invalid option, try again.")
@@ -164,7 +173,8 @@ def main():
         print("2. Resume Draft Order")
         print("3. View All Orders")
         print("4. Show Customer Invoices")
-        print("5. Exit")
+        print("5. Cancel Confirmed Order")
+        print("6. Exit")
 
         choice = input("Choose an option: ").strip()
 
@@ -199,7 +209,10 @@ def main():
                 continue
             print("\nAll Orders:")
             for i, order in enumerate(orders, start=1):
-                print(f"{i}. {order.customer.name} - {order.state} - Total: {order.compute_total()}")
+                cust_name = order.customer.name if order else "Unknown"
+                state = order.state if order else "Unknown"
+                total = order.compute_total() if order else 0
+                print(f"{i}. {cust_name} - {state} - Total: {total}")
 
 
         elif choice == "4":
@@ -215,8 +228,9 @@ def main():
             customer.show_invoices()
             print("---------------------------------")
             # -----------------------------------------------
-
         elif choice == "5":
+            cancel_order(orders)
+        elif choice == "6":
             print("Goodbye.")
             break
 
