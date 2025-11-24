@@ -2,8 +2,8 @@ from base import BaseModel
 from sale_order_line import SaleOrderLine  
 
 class SaleOrder(BaseModel):
-    def _init_(self, customer):
-        super()._init(name=f"SO_for{customer}") 
+    def __init__(self, customer):
+        super().__init__(name=f"SO_for{customer}") 
         #Calls BaseModel constructor and sets the name to a string like "SO_for_Alice".
         self.customer = customer
         self.lines = []
@@ -42,7 +42,7 @@ class SaleOrder(BaseModel):
         self.state = "confirmed"
         print(f"[ORDER CONFIRMED] Total = {self.compute_total()}")
 
-    def _str_(self):
+    def __str__(self):
         details = "\n".join(str(line) for line in self.lines)
          #sticks all the line texts together with a new line between each one.
         return (
