@@ -61,7 +61,7 @@ def create_sale_order(customers, products, existing_order=None):
 
     while True:
         print("\n--- Order Menu ---")
-        print("1. Add product")
+        print("1. Show product list and add to list1")
         print("2. Remove product")
         print("3. View current order")
         print("4. Finish order (save as draft)")
