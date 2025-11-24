@@ -1,5 +1,6 @@
 from base import BaseModel
-from sale_order_line import SaleOrderLine  
+from sale_order_line import SaleOrderLine
+from invoice import Invoice
 
 class SaleOrder(BaseModel):
     def __init__(self, customer):
@@ -38,6 +39,22 @@ class SaleOrder(BaseModel):
 
         for line in self.lines:
             line.product.reduce_stock(line.quantity)
+
+        invoice_name = self.name.replace("SO_", "INV_")
+
+        new_invoice = Invoice(
+            name=invoice_name,
+            customer=self.customer,
+            sale_order=self
+        )
+
+        for order_line in self.lines:
+            new_invoice.add_line(order_line.product, order_line.quantity)
+
+        new_invoice.post()
+
+        self.customer.add_invoice(new_invoice)
+        print(f"[INVOICE CREATED] {new_invoice.name} for {self.customer.name}")
 
         self.state = "confirmed"
         print(f"[ORDER CONFIRMED] Total = {self.compute_total()}")

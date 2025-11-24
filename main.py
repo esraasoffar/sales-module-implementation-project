@@ -2,6 +2,7 @@ from customer import Customer
 from product import Product
 from sale_order import SaleOrder
 from invoice import Invoice
+from invoice_line import InvoiceLine
 from customer import Customer
 
 
