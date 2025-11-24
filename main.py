@@ -157,8 +157,8 @@ def main():
         print("1. Create Sale Order")
         print("2. Resume Draft Order")
         print("3. View All Orders")
-        print("4. Cancel Confirmed Order")
-        print("5. Exit")
+        print("5. Cancel Confirmed Order")
+        print("6. Exit")
 
         choice = input("Choose an option: ").strip()
 
@@ -197,9 +197,9 @@ def main():
                 state = order.state if order else "Unknown"
                 total = order.compute_total() if order else 0
                 print(f"{i}. {cust_name} - {state} - Total: {total}")
-        elif choice == "4":
-            cancel_order(orders)
         elif choice == "5":
+            cancel_order(orders)
+        elif choice == "6":
             print("Goodbye.")
             break
 
