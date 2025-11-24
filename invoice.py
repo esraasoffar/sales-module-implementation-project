@@ -1,4 +1,5 @@
 from base import BaseModel
+from invoice_line import InvoiceLine
 
 class Invoice(BaseModel):
     def __init__(self, name, customer, sale_order):
@@ -11,7 +12,6 @@ class Invoice(BaseModel):
     def add_line(self, product, quantity):
         if self.state == "posted":
             raise Exception("Cannot add lines to a posted invoice.")
-
         line = InvoiceLine(
             name=f"Line for {product.name}",
             product=product,

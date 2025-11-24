@@ -14,8 +14,12 @@ class Customer(BaseModel):
         self.invoices.append(invoice)
 
     def show_invoices(self):
-        for inv in self.invoices:
-            print(f"Invoice: {inv.name}, State: {inv.state}")
+        if not self.invoices:
+            print(f"No invoices recorded for {self.name}.")
+            return
+
+        for i, inv in enumerate(self.invoices, start=1):
+            print(f"{i}. Invoice: {inv.name} | Total: {inv.total} | State: {inv.state}")
 
     def change_info(self, new_name=None, new_email=None):
         if new_name:

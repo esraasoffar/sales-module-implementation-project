@@ -1,6 +1,8 @@
 from customer import Customer
 from product import Product
 from sale_order import SaleOrder
+from invoice import Invoice
+from customer import Customer
 
 
 def list_products(products):
@@ -98,16 +100,17 @@ def create_sale_order(customers, products, existing_order=None):
                 print(f"- {line.product.name}: {line.quantity} pcs (Subtotal: {line.subtotal})")
             print(f"Order Total = {sale_order.compute_total()}")
 
+
+
         elif choice == "4":
-            # Finish as draft
+
+            # Finish order (draft)
+
             sale_order.state = "draft"
+
             print("\nOrder saved as DRAFT.")
-            if sale_order.lines:
-                print("Order Summary:")
-                for line in sale_order.lines:
-                    print(f"- {line.product.name}: {line.quantity} pcs (Subtotal: {line.subtotal})")
-                print(f"Order Total = {sale_order.compute_total()}")
-            break  # Return to main menu
+
+            return sale_order
 
         elif choice == "5":
             # Confirm order
@@ -141,6 +144,18 @@ def main():
         Product("Keyboard", 500, 30)
     ]
 
+
+    # Sample Invoices for testing show invoices
+    invoice_alice = Invoice(name="INV001", customer=customers[0], sale_order=None)
+    invoice_alice.add_line(products[0], 1)
+    invoice_alice.post()
+    customers[0].add_invoice(invoice_alice)
+
+    invoice_bob = Invoice(name="INV002", customer=customers[1], sale_order=None)
+    invoice_bob.add_line(products[1], 5)
+    customers[1].add_invoice(invoice_bob)
+
+
     orders = []  # Keep all orders
 
     while True:
@@ -148,7 +163,8 @@ def main():
         print("1. Create Sale Order")
         print("2. Resume Draft Order")
         print("3. View All Orders")
-        print("4. Exit")
+        print("4. Show Customer Invoices")
+        print("5. Exit")
 
         choice = input("Choose an option: ").strip()
 
@@ -185,7 +201,22 @@ def main():
             for i, order in enumerate(orders, start=1):
                 print(f"{i}. {order.customer.name} - {order.state} - Total: {order.compute_total()}")
 
+
         elif choice == "4":
+            list_customers(customers)
+            try:
+                cust_idx = int(input("Enter customer number to view invoices: ")) - 1
+                customer = customers[cust_idx]
+            except (ValueError, IndexError):
+                print("Invalid selection.")
+                continue
+
+            print(f"\n--- Invoices for {customer.name} ---")
+            customer.show_invoices()
+            print("---------------------------------")
+            # -----------------------------------------------
+
+        elif choice == "5":
             print("Goodbye.")
             break
 
