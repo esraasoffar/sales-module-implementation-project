@@ -170,11 +170,12 @@ def main():
     while True:
         print("\n=== Sales System ===")
         print("1. Create Sale Order")
-        print("2. Resume Draft Order")
-        print("3. View All Orders")
-        print("4. Show Customer Invoices")
-        print("5. Cancel Confirmed Order")
-        print("6. Exit")
+        print("2. Add New Customer")   # New option
+        print("3. Resume Draft Order")
+        print("4. View All Orders")
+        print("5. Show Customer Invoices")
+        print("6. Cancel Confirmed Order")
+        print("7. Exit")
 
         choice = input("Choose an option: ").strip()
 
@@ -182,8 +183,17 @@ def main():
             order = create_sale_order(customers, products)
             if order:
                 orders.append(order)
-
         elif choice == "2":
+            # Add a new customer
+            name = input("Enter customer name: ").strip()
+            email = input("Enter customer email: ").strip()
+            if name and email:
+                new_customer = Customer(name, email)
+                customers.append(new_customer)
+                print(f"Customer '{name}' added successfully.")
+            else:
+                print("Invalid input. Customer not added.")
+        elif choice == "3":
             draft_orders = [o for o in orders if o.state == "draft"]
             if not draft_orders:
                 print("No draft orders available.")
@@ -203,7 +213,7 @@ def main():
             updated_order = create_sale_order(customers, products, existing_order=order)
             orders[orders.index(order)] = updated_order  # Update the order in list
 
-        elif choice == "3":
+        elif choice == "4":
             if not orders:
                 print("No orders yet.")
                 continue
@@ -215,7 +225,7 @@ def main():
                 print(f"{i}. {cust_name} - {state} - Total: {total}")
 
 
-        elif choice == "4":
+        elif choice == "5":
             list_customers(customers)
             try:
                 cust_idx = int(input("Enter customer number to view invoices: ")) - 1
@@ -228,9 +238,9 @@ def main():
             customer.show_invoices()
             print("---------------------------------")
             # -----------------------------------------------
-        elif choice == "5":
-            cancel_order(orders)
         elif choice == "6":
+            cancel_order(orders)
+        elif choice == "7":
             print("Goodbye.")
             break
 
